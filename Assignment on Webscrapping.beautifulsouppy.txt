@@ -1,0 +1,747 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[87]:
+
+
+get_ipython().system('pip install bs4')
+get_ipython().system('pip install requests')
+
+
+# In[89]:
+
+
+from bs4 import BeautifulSoup
+import requests
+
+
+# In[39]:
+
+
+page = requests.get('https://en.wikipedia.org/wiki/Main_Page')
+
+
+# In[40]:
+
+
+page
+
+
+# In[41]:
+
+
+soup = BeautifulSoup(page.content)
+soup
+
+
+# # Question1:  Write a python program to display all the header tags from wikipedia.org and make data frame.
+# 
+# 
+
+# In[43]:
+
+
+titles = []
+for i in soup.find_all('span',class_="mw-headline"):
+    titles.append(i.text)
+    
+titles
+
+
+# In[44]:
+
+
+import pandas as pd
+df = pd.DataFrame({'Titles':titles})
+df
+
+
+# # Question 2:     Write s python program to display list of respected former presidents of India(i.e. Name , Term ofoffice)
+# from https://presidentofindia.nic.in/former-presidents.htm and make data frame.
+
+# In[45]:
+
+
+page = requests.get('https://presidentofindia.nic.in/former-presidents.htm')
+page
+
+
+# In[46]:
+
+
+soup = BeautifulSoup(page.content)
+soup
+
+
+# In[47]:
+
+
+name = [] # creating empty list
+
+for i in soup.find_all("div",class_="presidentListing"): 
+
+    name.append(i.find("h3").text.split("(")[0])
+
+
+# In[48]:
+
+
+name
+
+
+# In[49]:
+
+
+Time = []
+
+for i in soup.find_all('div', class_="presidentListing"):
+    Time.append(i.text.split(':')[1])
+
+Time
+
+
+# In[50]:
+
+
+import pandas as pd
+df = pd.DataFrame({'Name':name, 'Time':Time})
+df
+
+
+# In[ ]:
+
+
+
+
+
+# # Question 5:    Write a python program to scrape mentioned news details from https://www.cnbc.com/world/?region=world and
+# make data framei) Headline
+# ii) Time
+# iii) News Link
+
+# In[102]:
+
+
+get_ipython().system('pip install bs4')
+get_ipython().system('pip install requests')
+
+
+# In[103]:
+
+
+from bs4 import BeautifulSoup
+import requests
+
+
+# In[105]:
+
+
+page = requests.get('https://www.cnbc.com/world/?region=world')
+
+
+# In[106]:
+
+
+page
+
+
+# In[107]:
+
+
+soup = BeautifulSoup(page.content)
+soup
+
+
+# In[108]:
+
+
+Headline = []
+
+for i in soup.find_all('a',class_="LatestNews-headline"):
+    Headline.append(i.text)
+
+Headline
+
+
+# In[109]:
+
+
+Time = []
+
+for i in soup.find_all('time',class_="LatestNews-timestamp"):
+    Time.append(i.text)
+    
+Time
+
+
+# In[110]:
+
+
+Link = []
+for i in soup.find_all('a',class_="LatestNews-headline"):
+    Link.append(i.get('href'))
+    
+Link
+
+
+# In[111]:
+
+
+import pandas as pd   #to make dara frame
+df = pd.DataFrame({'Headline':Headline, 'Time':Time, 'News Link':Link})
+df
+
+
+# # Question 6:     Write a python program to scrape the details of most downloaded articles from AI in last 90
+# days.https://www.journals.elsevier.com/artificial-intelligence/most-downloaded-articles
+# Scrape below mentioned details and make data framei) Paper Title
+# ii) Authors
+# iii) Published Date
+# iv) Paper URL
+# 
+
+# In[112]:
+
+
+get_ipython().system('pip install bs4')
+get_ipython().system('pip install requests')
+
+
+# In[113]:
+
+
+
+#importing the required libraries
+from bs4 import BeautifulSoup
+import requests
+
+
+# In[114]:
+
+
+
+page = requests.get('https://www.journals.elsevier.com/artificial-intelligence/most-downloaded-articles')
+page
+
+
+# In[115]:
+
+
+soup = BeautifulSoup(page.content)
+soup
+
+
+# In[116]:
+
+
+title = []
+for i in soup.find_all('h2',class_="sc-1qrq3sd-1 gRGSUS sc-1nmom32-0 sc-1nmom32-1 btcbYu goSKRg"):
+    title.append(i.text)
+    
+title
+
+
+# In[117]:
+
+
+Author = []
+for i in soup.find_all('span',class_="sc-1w3fpd7-0 dnCnAO"):
+    Author.append(i.text)
+    
+Author
+
+
+# In[118]:
+
+
+Date = []
+for i in soup.find_all('span',class_="sc-1thf9ly-2 dvggWt"):
+    Date.append(i.text)
+    
+Date
+
+
+# In[119]:
+
+
+img = []
+for i in soup.find_all('a',class_="sc-5smygv-0 fIXTHm"):
+    img.append(i.get('href'))
+    
+img
+
+
+# In[120]:
+
+
+import pandas as pd   #to make dara frame
+df = pd.DataFrame({'Paper Title':title, 'Authors':Author, 'Published Date':Date, 'Paper URL':img})
+df
+
+
+# # Question 7:    Write a python program to scrape mentioned details from dineout.co.inand make data framei) Restaurant name
+# ii) Cuisine
+# iii) Location
+# iv) Ratings
+# v) Image URL
+
+# In[121]:
+
+
+get_ipython().system('pip install bs4')
+get_ipython().system('pip install requests')
+
+
+# In[122]:
+
+
+#importing the required libraries
+from bs4 import BeautifulSoup
+import requests
+
+
+# In[124]:
+
+
+page = requests.get('https://www.dineout.co.in/delhi-restaurants/buffet-special')
+
+
+# In[125]:
+
+
+page
+
+
+# In[126]:
+
+
+soup = BeautifulSoup(page.content)
+soup
+
+
+# In[127]:
+
+
+name = []
+for i in soup.find_all('a',class_="restnt-name ellipsis"):
+    name.append(i.text)
+    
+name
+
+
+# In[128]:
+
+
+Cuisine = []
+
+for i in soup.find_all('span', class_="double-line-ellipsis"):
+    Cuisine.append(i.text.split('|')[1])
+    
+Cuisine
+
+
+# In[129]:
+
+
+Location = []
+
+for i in soup.find_all('div', class_="restnt-loc ellipsis"):
+    Location.append(i.text)
+    
+Location
+
+
+# In[130]:
+
+
+Ratings = []
+
+for i in soup.find_all('div', class_="restnt-rating rating-4"):
+    Ratings.append(i.text)
+    
+Ratings
+
+
+# In[131]:
+
+
+Image = []
+for i in soup.find_all('img',class_="no-img"):
+    Image.append(i.get('data-src'))
+    
+Image
+
+
+# In[132]:
+
+
+import pandas as pd   #to make dara frame
+df = pd.DataFrame({'Name':name, 'Cuisine':Cuisine, 'Location':Location, 'Ratings':Ratings, 'Image':Image})
+df
+
+
+# In[ ]:
+
+
+
+
+
+# In[4]:
+
+
+get_ipython().system('pip install bs4')
+
+
+# In[5]:
+
+
+get_ipython().system('pip install requests')
+
+
+# In[6]:
+
+
+from bs4 import BeautifulSoup
+import requests
+
+
+# # Question 3:     Write a python program to scrape cricket rankings from icc-cricket.com. You have to scrape and make data framea) Top 10 ODI teams in men’s cricket along with the records for matches, points and rating.
+# b) Top 10 ODI Batsmen along with the records of their team andrating. c) Top 10 ODI bowlers along with the records of their team andrating.
+# 
+# page = requests.get('https://www.icc-cricket.com/rankings/mens/team-rankings/t20i')
+# page
+# page = requests.get('https://www.icc-cricket.com/rankings/mens/team-rankings/t
+
+# In[57]:
+
+
+page = requests.get('https://www.icc-cricket.com/rankings/mens/team-rankings/t20i')
+page
+
+
+# In[58]:
+
+
+soup = BeautifulSoup(page.content)
+soup
+
+
+# In[9]:
+
+
+MTeam = []
+
+
+
+for i in soup.find_all('span',class_="u-hide-phablet"):
+    
+    MTeam.append(i.text)
+
+    
+
+MTeam[0:10] 
+
+
+# In[10]:
+
+
+MRank = []
+
+
+
+for i in soup.find_all('td',class_="table-body__cell u-text-right rating"):
+
+    MRank.append(i.text)
+
+MRank[0:10]
+
+
+# In[59]:
+
+
+MMatch = []
+
+for i in soup.find_all('td', class_="table-body__cell u-center-text"):
+    MMatch.append(i.text.split(' , ')[0])
+    
+MMatch[0:20]
+
+
+# In[12]:
+
+
+import pandas as pd
+
+df = pd.DataFrame({'MTeam':MTeam})
+df
+
+
+# In[13]:
+
+
+page = requests.get('https://www.icc-cricket.com/rankings/mens/player-rankings/odi')
+page
+
+
+# In[14]:
+
+
+soup = BeautifulSoup(page.content)
+soup
+
+
+# In[15]:
+
+
+MPlayer = []
+
+for i in soup.find_all('td', class_="table-body__cell name"):
+    MPlayer.append(i.text)
+    
+MPlayer[0:10]
+
+
+# In[16]:
+
+
+MTeams = []
+
+for i in soup.find_all('span', class_="table-body__logo-text"):
+    MTeams.append(i.text)
+    
+MTeams[0:10]
+
+
+# In[17]:
+
+
+MRanking = []
+
+for i in soup.find_all('td', class_="table-body__cell u-text-right rating"):
+    MRanking.append(i.text)
+    
+MRanking[0:10]
+
+
+# In[18]:
+
+
+import pandas as pd
+
+df = pd.DataFrame({'MPlayer':MPlayer, 'MTeams':MTeams, 'MRanking':MRanking})
+df
+
+
+# In[19]:
+
+
+MBTeams = []
+
+for i in soup.find_all('span', class_="table-body__logo-text"):
+    MBTeams.append(i.text)
+    
+MBTeams[9:21]
+
+
+# In[20]:
+
+
+MBowler = []
+
+for i in soup.find_all('td', class_="table-body__cell name"):
+    MBowler.append(i.text)
+    
+MBowler[9:19]
+
+
+# In[21]:
+
+
+MBRanking = []
+
+for i in soup.find_all('td', class_="table-body__cell u-text-right rating"):
+    MBRanking.append(i.text)
+    
+MBRanking[9:21]
+
+
+# In[22]:
+
+
+import pandas as pd
+
+df = pd.DataFrame({'MBowler':MBowler, 'MBTeams':MBTeams, 'MBRanking':MBRanking})
+df
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# # Question 4:     Write a python program to scrape cricket rankings from icc-cricket.com. You have to scrape and make data framea) Top 10 ODI teams in women’s cricket along with the records for matches, points and rating.¶¶
+# b) Top 10 women’s ODI Batting players along with the records of their team and rating. c) Top 10 women’s ODI all-rounder along with the records of their team and rating.
+
+# In[53]:
+
+
+page = requests.get ('https://www.icc-cricket.com/rankings/womens/team-rankings/odi')
+page
+
+
+# In[54]:
+
+
+soup = BeautifulSoup(page.content)
+soup
+
+
+# In[25]:
+
+
+WTeam = []
+
+for i in soup.find_all('span', class_="u-hide-phablet"):
+    WTeam.append(i.text)
+    
+WTeam
+
+
+# In[26]:
+
+
+WRank = []
+
+for i in soup.find_all('td', class_="table-body__cell u-text-right rating"):
+    WRank.append(i.text)
+    
+WRank[0:10]
+
+
+# In[56]:
+
+
+WMatch = []
+
+for i in soup.find_all('td', class_="table-body__cell u-center-text"):
+    WMatch.append(i.text.split(' , ')[0])
+    
+WMatch[0:20]
+
+
+# In[28]:
+
+
+import pandas as pd   #to make dara frame
+df = pd.DataFrame({'WTeam':WTeam})
+df
+
+
+# In[29]:
+
+
+page = requests.get ('https://www.icc-cricket.com/rankings/womens/player-rankings/odi')
+page
+
+
+# In[30]:
+
+
+soup = BeautifulSoup(page.content)
+soup
+
+
+# In[31]:
+
+
+WBating= []
+
+for i in soup.find_all('td', class_="table-body__cell name"):
+    WBating.append(i.text)
+    
+WBating[0:10]
+
+
+# In[32]:
+
+
+WTeams= []
+
+for i in soup.find_all('span', class_="table-body__logo-text"):
+    WTeams.append(i.text)
+    
+WTeams[0:10]
+
+
+# In[33]:
+
+
+WRanks= []
+
+for i in soup.find_all('td', class_="table-body__cell u-text-right rating"):
+    WRanks.append(i.text)
+    
+WRanks[0:10]
+
+
+# In[34]:
+
+
+import pandas as pd   #to make dara frame
+df = pd.DataFrame({'WBating':WBating, 'WTeams':WTeams, 'WRanks':WRanks})
+df
+
+
+# In[35]:
+
+
+WAllrounder= []
+
+for i in soup.find_all('td', class_="table-body__cell name"):
+    WAllrounder.append(i.text)
+    
+WAllrounder[18:27]
+
+
+# In[36]:
+
+
+WTeamA= []
+
+for i in soup.find_all('span', class_="table-body__logo-text"):
+    WTeamA.append(i.text)
+    
+WTeamA[18:27]
+
+
+# In[37]:
+
+
+WRanksA= []
+
+for i in soup.find_all('td', class_="table-body__cell u-text-right rating"):
+    WRanksA.append(i.text)
+    
+WRanksA[18:27]
+
+
+# In[38]:
+
+
+import pandas as pd   #to make dara frame
+df = pd.DataFrame({'WAllrounder':WAllrounder, 'WTeamA':WTeamA, 'WRanksA':WRanksA})
+df
+
+
+# In[ ]:
+
+
+
+
